@@ -1,25 +1,14 @@
-
 #include <MAUtil/Moblet.h>
-
 #include "MAHeaders.h"
-
-
-using namespace MAUtil;
-
-
 #include "WeerData.hpp"
 #include "TextueelScherm.hpp"
 #include "VisueelScherm.hpp"
 
+using namespace MAUtil;
 
-
-
-class MAUIMoblet : public Moblet
-{
+class MAUIMoblet : public Moblet{
 public:
-
-	MAUIMoblet()
-	{
+	MAUIMoblet(){
 		//klasse die weerdata bevat, en kan updaten
 		WeerData* weerData = new WeerData();
 
@@ -35,26 +24,16 @@ public:
 		textueelScherm->show();
 	}
 
-
-	virtual ~MAUIMoblet()
-	{
-	}
-
-
-	void keyPressEvent(int keyCode, int nativeCode)
-	{
-		if (MAK_BACK == keyCode || MAK_0 == keyCode)
-		{
+	void keyPressEvent(int keyCode, int nativeCode){
+		if (MAK_BACK == keyCode || MAK_0 == keyCode){
 			close();
 		}
 	}
 
+	virtual ~MAUIMoblet(){}
 };
 
-
-
-extern "C" int MAMain()
-{
+extern "C" int MAMain(){
 	Moblet::run(new MAUIMoblet());
 	return 0;
 }

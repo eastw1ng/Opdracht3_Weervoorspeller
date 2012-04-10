@@ -7,29 +7,7 @@
 
 #include "WeerData.hpp"
 
-
-//hulpfunctie
-char* zoekWoord(char* buffer, char* testString)
-{
-	//zoekt de beginpositie van testString als die voorkomt in buffer
-	char* myPos = strstr( buffer, testString );
-
-	if(myPos == NULL)
-	{
-		return NULL;
-	}
-
-	else
-	{
-		//geef de positie terug achter de gevonden string
-		return( myPos + strlen(testString) );
-	}
-}
-
-
-
-WeerData::WeerData() : HttpConnection( this )
-{
+WeerData::WeerData():HttpConnection( this ){
 	//stel de isConnecting boolean in op 'in gebruik'
 	this->isConnecting = true;
 
@@ -38,36 +16,36 @@ WeerData::WeerData() : HttpConnection( this )
     int res = this->create( url, HTTP_GET );
 
     //foutafhandeling bij connectie probleem
-    if(res < 0)
-    {
-        lprintfln( "unable to connect - %i\n", res );
-    }
-
-    else
-    {
+    if(res < 0){
+        lprintfln( "Unable to connect - %i\n", res );
+    }else{
     	this->finish();
     }
 
     //reset de weerdata naar 0
-	for( int i = 0; i < 3; i++ )
-	{
+	for( int i = 0; i < 3; i++ ){
 		this->zonneschijn[i] = 0;
 		this->neerslag[i] = 0;
 		this->minimumtemperatuur[i] = 0;
 	}
 }
 
-WeerData::~WeerData()
-{
+//hulpfunctie
+char* zoekWoord(char* buffer, char* testString){
+	//zoekt de beginpositie van testString als die voorkomt in buffer
+	char* myPos = strstr( buffer, testString );
 
+	if(myPos == NULL){
+		return NULL;
+	}else{
+		//geef de positie terug achter de gevonden string
+		return( myPos + strlen(testString) );
+	}
 }
 
-
-void WeerData::update()
-{
+void WeerData::update(){
 	//update alleen als er niet momenteel al een update uitgevoerd wordt
-	if( this->isConnecting == false )
-	{
+	if( this->isConnecting == false ){
 		//stel de isConnecting boolean in op 'in gebruik'
 		this->isConnecting = true;
 
@@ -76,11 +54,7 @@ void WeerData::update()
 	}
 }
 
-
-
-
-void WeerData::httpFinished( HttpConnection* http, int result )
-{
+void WeerData::httpFinished( HttpConnection* http, int result ){
 	//stel de isConnecting boolean in op 'in gebruik'
 	this->isConnecting = true;
 
@@ -90,17 +64,14 @@ void WeerData::httpFinished( HttpConnection* http, int result )
 }
 
 
-void WeerData::connRecvFinished( Connection* conn, int result )
-{
+void WeerData::connRecvFinished( Connection* conn, int result ){
 	//blijf lezen met 1024 bytes (zie onder) tot result einde van de site heeft bereikt (waarbij result < 0)
-    if(result >= 0)
-    {
+    if(result >= 0){
     	//zoek zonneschijn
         char* weerDataString = zoekWoord( weerDataRecv, "<td>Zonneschijn (%)</td>" ); //buffer van totale tekst
 
         //zonneschijn gevonden
-        if( weerDataString )
-        {
+        if( weerDataString ){
         	char data[2];
 
 			//zonneschijn data vandaag
@@ -116,13 +87,11 @@ void WeerData::connRecvFinished( Connection* conn, int result )
         	this->zonneschijn[2] = atoi( data );
         }
 
-
         //zoek neerslagkans
         weerDataString = zoekWoord( weerDataRecv, "<td>Neerslagkans (%)</td>" );
 
         //neerslagkans gevonden
-        if( weerDataString )
-        {
+        if( weerDataString ){
         	char data[2];
 
 			//neerslag data vandaag
@@ -138,13 +107,11 @@ void WeerData::connRecvFinished( Connection* conn, int result )
         	this->neerslag[2] = atoi( data );
         }
 
-
         //zoek minimum temperatuur
         weerDataString = zoekWoord( weerDataRecv, "<td>Minimumtemperatuur (&deg;C)</td>" );
 
         //gevonden
-        if( weerDataString )
-        {
+        if( weerDataString ){
         	char data[2];
 
         	//min temp data vandaag
@@ -164,28 +131,19 @@ void WeerData::connRecvFinished( Connection* conn, int result )
         	return;
         }
 
-
         //lees de volgende 1024 bytes, deze functie wordt dan weer opnieuw aangeroepen
         this->recv(weerDataRecv, CONNECTION_BUFFER_SIZE);
-    }
-
-    else
-    {
+    }else{
     	//fout is opgetreden of we hebben het eind van het document bereikt, sluit af.
     	this->close();
     }
 }
 
+void WeerData::connReadFinished( Connection* conn, int result ){}
 
-void WeerData::connReadFinished( Connection* conn, int result )
-{
-}
-
-
-void WeerData::connectFinished(Connection* conn, int result)
-{
+void WeerData::connectFinished(Connection* conn, int result){
 	//connectie is geeindigd, geef connectie weer vrij met de isConnecting boolean
 	this->isConnecting = false;
 }
 
-
+WeerData::~WeerData(){}

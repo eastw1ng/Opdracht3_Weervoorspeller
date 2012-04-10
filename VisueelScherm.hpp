@@ -8,23 +8,22 @@
 #ifndef VISUEELSCHERM_HPP_
 #define VISUEELSCHERM_HPP_
 
-
 #include <MAUI/Screen.h>
 #include <MAUI/ListBox.h>
 #include <MAUI/Label.h>
 #include <MAUI/Image.h>
-
+#include <MAUI/Font.h>
+#include <MAUI/WidgetSkin.h>
 #include <conprint.h>
-
 #include "WeerData.hpp"
-
 
 using namespace MAUI;
 
-
-class VisueelScherm : public Screen
-{
+class VisueelScherm : public Screen{
 private:
+	//Scherm informatie
+	int screenWidth;
+	int screenHeight;
 
 	//skin, font
 	WidgetSkin* skin;

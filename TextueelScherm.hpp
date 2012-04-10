@@ -8,23 +8,19 @@
 #ifndef TEXTUEELSCHERM_HPP_
 #define TEXTUEELSCHERM_HPP_
 
-
 #include <MAUI/Screen.h>
 #include <MAUI/Font.h>
 #include <MAUI/WidgetSkin.h>
-
 #include <conprint.h>
-
-
 #include "WeerData.hpp"
-
 
 using namespace MAUI;
 
-
-class TextueelScherm : public Screen
-{
+class TextueelScherm : public Screen{
 private:
+	//Scherm informatie
+	int screenWidth;
+	int screenHeight;
 
 	//skin, font
 	WidgetSkin* skin;
@@ -51,11 +47,9 @@ private:
 public:
 	TextueelScherm( WeerData* weerData );
 	virtual ~TextueelScherm();
-
 	void setToggleScherm( Screen* toggleScherm );
 	void update();
 	void toonWeerData();
-
 	void pointerPressEvent( MAPoint2d point );
 };
 
